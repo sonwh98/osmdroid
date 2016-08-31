@@ -65,4 +65,15 @@ public abstract class BaseSampleFragment extends Fragment {
 	protected void addOverlays() {
 		//
 	}
+
+	/**
+	 * runs off of the UI thread and typically from android instrumentation tests
+	 * Execute the on device tests using "gradlew cC"
+	 *
+	 * override this is the fragment does more than just display a static view, requires user input, or has
+	 * a more complex verification task
+	 */
+	public void runTestScenario() {
+
+	}
 }

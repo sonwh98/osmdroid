@@ -77,8 +77,11 @@ env:
     # ANDROID_TARGET=19  ANDROID_ABI=x86 not currently possible with travis, missing some kind of hardware acceleration driver
 
 before_install:
-  # create and start emulators
+  # setup AVD to have a geolocation for testing, roughly off the coast of NJ, USA
   - android list targets
+  - chmod 755 setLocation.sh
+  - ./setLocation.sh
+  # create and start emulators
   - echo no | android create avd --force -n test$ANDROID_TARGET -t $ANDROID_TARGET --abi $ANDROID_ABI --sdcard 200M
   - emulator -memory 1536 -avd test$ANDROID_TARGET -no-skin -no-audio -no-window &
   - android-wait-for-emulator

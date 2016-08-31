@@ -60,9 +60,8 @@ public class ExtraSamplesTest extends ActivityInstrumentationTestCase2<ExtraSamp
         assertNotNull(frag);
 
         assertTrue(frag instanceof FragmentSamples);
-        //FragmentSamples samples = (FragmentSamples) frag;
 
-
+        //forces a random firing order to tests
         int[] fireOrder = new int[sampleFactory.count()];
         for (int i = 0; i < sampleFactory.count(); i++) {
             fireOrder[i]=i;
@@ -100,6 +99,7 @@ public class ExtraSamplesTest extends ActivityInstrumentationTestCase2<ExtraSamp
                 });
                 try {
                     Thread.sleep(2000);
+                    basefrag.runTestScenario();
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
