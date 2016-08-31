@@ -77,10 +77,6 @@ env:
     # ANDROID_TARGET=19  ANDROID_ABI=x86 not currently possible with travis, missing some kind of hardware acceleration driver
 
 before_install:
-  # setup AVD to have a geolocation for testing, roughly off the coast of NJ, USA
-  - android list targets
-  - chmod 755 setLocation.sh
-  - ./setLocation.sh
   # create and start emulators
   - echo no | android create avd --force -n test$ANDROID_TARGET -t $ANDROID_TARGET --abi $ANDROID_ABI --sdcard 200M
   - emulator -memory 1536 -avd test$ANDROID_TARGET -no-skin -no-audio -no-window &
@@ -112,9 +108,13 @@ before_script:
   - adb shell chmod 777 /mnt/sdcard
   - adb shell mkdir /sdcard/osmdroid/
   - adb push osmdroid-forge-app/world.map /sdcard/osmdroid/world.map
-  #- adb push resources/usgsbase.gemf /sdcard/osmdroid/usgsbase.gemf
-  #- adb push resources/usgstopo.sqlite /sdcard/osmdroid/usgstopo.sqlite
-  #- adb push resources/usgssat.zip /sdcard/osmdroid/usgssat.zip
+  - adb push resources/usgsbase.gemf /sdcard/osmdroid/usgsbase.gemf
+  - adb push resources/usgstopo.sqlite /sdcard/osmdroid/usgstopo.sqlite
+  - adb push resources/usgssat.zip /sdcard/osmdroid/usgssat.zip
+  # setup AVD to have a geolocation for testing, roughly off the coast of NJ, USA
+  - android list targets
+  - chmod 755 setLocation.sh
+  - ./setLocation.sh
 
 #build
 script:
