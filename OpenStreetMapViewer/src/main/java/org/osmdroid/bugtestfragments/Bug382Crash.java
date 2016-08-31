@@ -58,4 +58,37 @@ public class Bug382Crash extends BaseSampleFragment {
 
 
     }
+
+    @Override
+    public void runTestScenario() {
+
+        for (int i=0; i < 10; i++) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mMapView.getController().zoomTo(mMapView.getMaxZoomLevel());
+                    mMapView.getController().animateTo(new GeoPoint(26.0, 113.5));
+                }
+            });
+
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mMapView.getController().zoomTo(mMapView.getMinZoomLevel());
+                    mMapView.getController().animateTo(new GeoPoint(26.0, 113.5));
+                }
+            });
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
 }

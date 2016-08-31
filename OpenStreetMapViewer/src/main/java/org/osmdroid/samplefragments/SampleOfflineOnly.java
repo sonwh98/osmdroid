@@ -4,6 +4,8 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import org.osmdroid.R;
+import org.osmdroid.constants.OpenStreetMapConstants;
+import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.tileprovider.modules.ArchiveFileFactory;
 import org.osmdroid.tileprovider.modules.IArchiveFile;
 import org.osmdroid.tileprovider.modules.OfflineTileProvider;
@@ -39,7 +41,7 @@ public class SampleOfflineOnly extends BaseSampleFragment {
 
 
         //first we'll look at the default location for tiles that we support
-        File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/osmdroid/");
+        File f = OpenStreetMapTileProviderConstants.getBasePath();
         if (f.exists()) {
 
             File[] list = f.listFiles();
