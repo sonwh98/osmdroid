@@ -1,6 +1,7 @@
 package org.osmdroid.bugtestfragments;
 
 import android.graphics.Color;
+import android.widget.Button;
 
 import org.osmdroid.R;
 import org.osmdroid.samplefragments.BaseSampleFragment;
@@ -24,6 +25,7 @@ public class Bug382Crash extends BaseSampleFragment {
 
     private Polygon polygon;
     private Polyline polyline;
+    private Button kickStart;
 
     @Override
     protected void addOverlays() {
