@@ -39,6 +39,8 @@ public class SampleCacheDownloader extends BaseSampleFragment implements View.On
     CacheManager mgr;
     AlertDialog downloadPrompt=null;
     AlertDialog alertDialog=null;
+    boolean taskRunning=false;
+    int errors=0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -200,15 +202,21 @@ public class SampleCacheDownloader extends BaseSampleFragment implements View.On
                     }
 
                     //this triggers the download
+                    taskRunning=true;
+                    SampleCacheDownloader.this.errors=0;
                     mgr.downloadAreaAsync(getActivity(), bb, zoommin, zoommax, new CacheManager.CacheManagerCallback() {
                         @Override
                         public void onTaskComplete() {
                             Toast.makeText(getActivity(), "Download complete!", Toast.LENGTH_LONG).show();
+                            SampleCacheDownloader.this.errors=0;
+                            taskRunning=false;
                         }
 
                         @Override
                         public void onTaskFailed(int errors) {
                             Toast.makeText(getActivity(), "Download complete with " + errors + " errors", Toast.LENGTH_LONG).show();
+                            SampleCacheDownloader.this.errors=errors;
+                            taskRunning=false;
                         }
 
                         @Override
@@ -318,5 +326,38 @@ public class SampleCacheDownloader extends BaseSampleFragment implements View.On
         if (downloadPrompt!=null && downloadPrompt.isShowing()){
             downloadPrompt.dismiss();
         }
+    }
+
+    public void runTestScenario() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showCacheManagerDialog();
+
+                alertDialog.dismiss();
+                alertDialog=null;
+
+
+                downloadJobAlert();
+                zoom_min.setProgress(1);
+                zoom_max.setProgress(3);
+
+                executeJob.performClick();
+            }
+        });
+        //wait until it's done
+        while (taskRunning){
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+
+            }
+
+        }
+        //download is done, all we can do is check the error count.
+        //problem is, what does a non failure test condition look like here?
+
+
+
     }
 }
