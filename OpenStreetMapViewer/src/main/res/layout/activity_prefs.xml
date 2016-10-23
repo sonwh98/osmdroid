@@ -34,14 +34,39 @@
         android:id="@+id/textViewCacheDirectory" />
 
     <Button
-        android:text="Pick Cache Location"
+        android:text="@string/pick_cache_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonSetCache" />
 
     <Button
-        android:text="Enter Cache Location"
+        android:text="@string/enter_cache_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonManualCacheEntry" />
+
+    <TextView
+        android:text="@string/cache_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp" />
+
+    <TextView
+        android:text="PLACEHOLDER"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewCurrentCache" />
+
+    <TextView
+        android:text="Debug Stats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:textSize="18dp" />
+
+    <TextView
+        android:text="PLACEHOLDER"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewCurrentCounters" />
 </LinearLayout>

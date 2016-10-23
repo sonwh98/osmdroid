@@ -52,4 +52,11 @@ public interface IFilesystemCache {
 	 * @return true if it was removed, false otherwise
      */
 	boolean remove(ITileSource tileSource, MapTile tile);
+
+	/**
+	 * returns the current size of the cache
+	 * @since 5.6
+	 * @return -1 if not supported
+     */
+	long getCurrentSize();
 }

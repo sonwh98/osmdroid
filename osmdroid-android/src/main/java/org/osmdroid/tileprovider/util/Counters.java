@@ -8,20 +8,21 @@ import android.util.Log;
  * Created by alex on 6/16/16.
  */
 public class Counters {
-    static final String TAG="osmCounters";
+    static final String TAG = "osmCounters";
     /**
      * out of memory errors
      */
-    public static int countOOM =0;
+    public static int countOOM = 0;
 
-    public static int tileDownloadErrors=0;
+    public static int tileDownloadErrors = 0;
 
-    public static int fileCacheSaveErrors=0;
+    public static int fileCacheSaveErrors = 0;
 
-    public static int fileCacheMiss=0;
+    public static int fileCacheMiss = 0;
 
-    public static int fileCacheOOM=0;
-    public static int fileCacheHit=0;
+    public static int fileCacheOOM = 0;
+
+    public static int fileCacheHit = 0;
 
     public static void printToLogcat() {
         Log.d(TAG, "countOOM " + countOOM);
@@ -31,12 +32,29 @@ public class Counters {
         Log.d(TAG, "fileCacheOOM " + fileCacheOOM);
         Log.d(TAG, "fileCacheHit " + fileCacheHit);
     }
-    public static void reset(){
-        countOOM =0;
-        tileDownloadErrors=0;
-        fileCacheSaveErrors=0;
-        fileCacheMiss=0;
-        fileCacheOOM=0;
-        fileCacheHit=0;
+
+    /**
+     * @since 5.6
+     * @return
+     */
+    public static String asString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("OOM: " + countOOM + "\n");
+        sb.append("tileDownloadErrors: " + tileDownloadErrors + "\n");
+        sb.append("fileCacheSaveErrors: " + fileCacheSaveErrors + "\n");
+        sb.append("fileCacheMiss: " + fileCacheMiss + "\n");
+        sb.append("fileCacheOOM: " + fileCacheOOM + "\n");
+        sb.append("fileCacheHit: " + fileCacheHit + "\n");
+
+        return sb.toString();
+    }
+
+    public static void reset() {
+        countOOM = 0;
+        tileDownloadErrors = 0;
+        fileCacheSaveErrors = 0;
+        fileCacheMiss = 0;
+        fileCacheOOM = 0;
+        fileCacheHit = 0;
     }
 }

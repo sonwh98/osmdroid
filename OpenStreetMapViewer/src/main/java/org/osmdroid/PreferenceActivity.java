@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
+import org.osmdroid.tileprovider.modules.SqlTileWriter;
+import org.osmdroid.tileprovider.util.Counters;
 import org.osmdroid.tileprovider.util.StorageUtils;
 import org.osmdroid.views.MapView;
 
@@ -51,12 +53,17 @@ public class PreferenceActivity extends Activity implements View.OnClickListener
         checkBoxHardwareAcceleration.setOnClickListener(this);
         buttonSetCache.setOnClickListener(this);
         buttonManualCacheEntry.setOnClickListener(this);
+        ((TextView)findViewById(R.id.textViewCurrentCache)).setText(
+                "MAX: " + android.text.format.Formatter.formatShortFileSize(this, OpenStreetMapTileProviderConstants.TILE_MAX_CACHE_SIZE_BYTES)  +
+                "\nTRIM: " + android.text.format.Formatter.formatShortFileSize(this, OpenStreetMapTileProviderConstants.TILE_TRIM_CACHE_SIZE_BYTES) +
+                        "\nCURRENT: " + android.text.format.Formatter.formatShortFileSize(this, new SqlTileWriter().getCurrentSize())
+        );
+        ((TextView)findViewById(R.id.textViewCurrentCounters)).setText(Counters.asString());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //TODO load from preferneces
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         checkBoxDebugMode.setChecked(prefs.getBoolean("checkBoxDebugMode", OpenStreetMapTileProviderConstants.DEBUGMODE));
         checkBoxDebugTileProvider.setChecked(prefs.getBoolean("checkBoxDebugTileProvider", OpenStreetMapTileProviderConstants.DEBUG_TILE_PROVIDERS));

@@ -115,4 +115,10 @@ public class SqliteArchiveTileWriter implements IFilesystemCache {
         //not supported
         return false;
     }
+
+    @Override
+    public long getCurrentSize() {
+        //not supported
+        return -1;
+    }
 }
