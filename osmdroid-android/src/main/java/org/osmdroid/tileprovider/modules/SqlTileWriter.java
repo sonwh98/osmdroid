@@ -38,9 +38,22 @@ import static org.osmdroid.tileprovider.modules.DatabaseFileArchive.TABLE;
  */
 public class SqlTileWriter implements IFilesystemCache {
     public static final String DATABASE_FILENAME = "cache.db";
-
+    /**
+     * disables cache purge of expired tiled on start up
+     * if this is set to false, the database will only purge tiles if manually called or if
+     * the storage device runs out of space.
+     *
+     * expired tiles will continue to be overwritten as new versions are downloaded regardless
+     *
+     * @since 5.6
+     */
+    public static boolean CLEANUP_ON_START=true;
     protected File db_file;
     protected SQLiteDatabase db;
+
+    /**
+     * a questimated size (average-ish) size of a tile
+     */
     final int questimate=4000;
     static boolean hasInited=false;
 
@@ -59,15 +72,17 @@ public class SqlTileWriter implements IFilesystemCache {
         if (!hasInited){
             hasInited=true;
 
-            // do this in the background because it takes a long time
-            final Thread t = new Thread() {
-                @Override
-                public void run() {
-                    runCleanupOperation();
-                }
-            };
-            t.setPriority(Thread.MIN_PRIORITY);
-            t.start();
+            if (CLEANUP_ON_START) {
+                // do this in the background because it takes a long time
+                final Thread t = new Thread() {
+                    @Override
+                    public void run() {
+                        runCleanupOperation();
+                    }
+                };
+                t.setPriority(Thread.MIN_PRIORITY);
+                t.start();
+            }
         }
     }
 
@@ -89,14 +104,15 @@ public class SqlTileWriter implements IFilesystemCache {
             //keep if now is < expiration date
             //delete if now is > expiration date
             long now = System.currentTimeMillis();
+            /*
             int rows = db.delete(TABLE, "expires < ?", new String[]{System.currentTimeMillis() + ""});
+
             Log.d(IMapView.LOGTAG, "Local storage cache purged " + rows + " expired tiles in " + (System.currentTimeMillis() - now) + "ms, cache size is " + db_file.length() + "bytes");
 
-            //VACUUM the database
+            //if needed, remove tiles until the file length is reduced.
             Log.d(IMapView.LOGTAG, "Local cache is now " + db_file.length() + " max size is " + OpenStreetMapTileProviderConstants.TILE_MAX_CACHE_SIZE_BYTES);
             now = System.currentTimeMillis();
-            //db.execSQL("VACUUM " + DatabaseFileArchive.TABLE + ";");
-            // Log.d(IMapView.LOGTAG, "VACUUM completed in " + (System.currentTimeMillis()-now) + "ms, cache size is " + db_file.length() + "bytes");
+            */
             if (db_file.length() > OpenStreetMapTileProviderConstants.TILE_MAX_CACHE_SIZE_BYTES) {
                 long diff = db_file.length() - OpenStreetMapTileProviderConstants.TILE_MAX_CACHE_SIZE_BYTES ;
                 long tilesToKill = diff / questimate;
