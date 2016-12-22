@@ -13,26 +13,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.osmdroid.R;
-import org.osmdroid.StarterMapActivity;
 import org.osmdroid.debug.browser.CacheBrowserActivity;
 import org.osmdroid.debug.model.SqlTileWriterExt;
 import org.osmdroid.tileprovider.modules.SqlTileWriter;
-import org.osmdroid.tileprovider.util.StorageUtils;
+import org.osmdroid.tileprovider.util.Counters;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A basic list view to show various cache metrics and management
+ *
+ * requires api11+
+ *
  * created on 12/21/2016.
  *
+ * @since 5.6.1
  * @author Alex O'Ree
  */
 
 public class CacheAnalyzerActivity extends Activity implements AdapterView.OnItemClickListener, Runnable {
     SqlTileWriterExt cache = null;
     TextView cacheStats;
-
+    AlertDialog show=null;
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,7 @@ public class CacheAnalyzerActivity extends Activity implements AdapterView.OnIte
         list.add("Browse the cache");
         list.add("Purge the cache");
         list.add("Purge a specific tile source");
+        list.add("See the debug counters");
 
         ListView lv = (ListView) findViewById(R.id.statslist);
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
@@ -62,6 +66,9 @@ public class CacheAnalyzerActivity extends Activity implements AdapterView.OnIte
         super.onPause();
         cache.onDetach();
         cache = null;
+        if (show!=null)
+            show.dismiss();
+        show=null;
     }
 
     @Override
@@ -76,7 +83,26 @@ public class CacheAnalyzerActivity extends Activity implements AdapterView.OnIte
             case 2:
                 purgeTileSource();
                 break;
+            case 3:
+                showDebugCounters();
+                break;
         }
+    }
+
+    private void showDebugCounters() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Tile Source");
+        StringBuilder sb = new StringBuilder();
+        sb.append(Counters.class.getCanonicalName() +"\nPerformance and debug counters\n\n");
+        sb.append("Out of memory errors: " + Counters.countOOM + "\n");
+        sb.append("File cache hit: " + Counters.fileCacheHit + "\n");
+        sb.append("File cache miss: " + Counters.fileCacheMiss + "\n");
+        sb.append("File cache oom: " + Counters.fileCacheOOM+ "\n");
+        sb.append("File cache save errors: " + Counters.fileCacheSaveErrors + "\n");
+        sb.append("Tile download errors: " + Counters.tileDownloadErrors + "\n");
+        builder.setMessage(sb.toString());
+
+        show = builder.show();
     }
 
     private void purgeTileSource() {
