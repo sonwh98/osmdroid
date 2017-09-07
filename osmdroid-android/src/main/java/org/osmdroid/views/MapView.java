@@ -19,6 +19,7 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
+import org.osmdroid.mercury.MessageBus;
 import org.osmdroid.tileprovider.MapTileProviderArray;
 import org.osmdroid.tileprovider.MapTileProviderBase;
 import org.osmdroid.tileprovider.MapTileProviderBasic;
@@ -1235,6 +1236,7 @@ public class MapView extends ViewGroup implements IMapView, MapViewConstants,
 			multiTouchScale = 1;
 		}
 		mMultiTouchScale = multiTouchScale;
+		MessageBus.broadcast("map/scale", multiTouchScale);
 		// Request a layout, so that children are correctly positioned according to scale
 		requestLayout();
 		invalidate(); // redraw
