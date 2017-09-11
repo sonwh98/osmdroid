@@ -14,8 +14,10 @@ public class MessageBus {
 
     public static void broadcast(Object key, Object value) {
         Set<MessageHandler> messageHandlers = messageHandlerMap.get(key);
-        for (MessageHandler h : messageHandlers) {
-            h.handleMessage(value);
+        if (messageHandlers != null) {
+            for (MessageHandler h : messageHandlers) {
+                h.handleMessage(value);
+            }
         }
     }
 
